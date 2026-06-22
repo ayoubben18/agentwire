@@ -49,8 +49,8 @@ decide the next version. Use [Conventional Commits](https://www.conventionalcomm
 | --- | --- | --- |
 | `feat:` | **minor** (`0.x.0`) | a new capability |
 | `fix:` | **patch** (`0.0.x`) | a bug fix |
-| `perf:` / `refactor:` / `docs:` | patch | perf, internal cleanup, docs |
-| `chore:` / `test:` / `style:` | **no release** | tooling, tests, formatting |
+| `perf:` / `refactor:` | patch | perf, internal package cleanup |
+| `docs:` / `chore:` / `test:` / `style:` | **no release** | docs site, README, tooling, tests, formatting |
 | `feat!:` or a `BREAKING CHANGE:` footer | **major** | an incompatible change |
 
 ```
