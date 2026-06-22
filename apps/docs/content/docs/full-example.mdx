@@ -167,7 +167,7 @@ export async function POST(req: Request) {
 ## 4. The interactive UI components
 
 These render from a tool call's **input** and settle it with two helpers:
-`resolveInteractive` (the traveler acted) and `interruptInteractive` (they bailed
+`completeInteractive` (the traveler acted) and `interruptInteractive` (they bailed
 out to chat). No bus payloads to hand-assemble.
 
 ```tsx title="components/flight-gallery.tsx"

@@ -65,8 +65,9 @@ function DefaultApproval({
 
 /**
  * Render one `UIMessage`'s parts: text, interactive widgets (from `interactive`),
- * approval cards (for `approvalTools`), and a status/label → output progression
- * for everything else. This is the message-renderer boilerplate, abstracted.
+ * approval cards (auto-detected on the `approval-requested` state), and a
+ * status/label → output progression for everything else. This is the
+ * message-renderer boilerplate, abstracted.
  */
 export function renderMessageParts(message: UIMessage, options: RenderPartsOptions = {}): ReactNode {
   const { interactive = {}, addToolApprovalResponse, slots = {} } = options;

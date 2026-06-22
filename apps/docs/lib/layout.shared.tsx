@@ -12,6 +12,6 @@ export function baseOptions(): BaseLayoutProps {
         </span>
       ),
     },
-    githubUrl: "https://github.com/your-org/agentwire",
+    githubUrl: "https://github.com/kovenlabs/agentwire",
   };
 }

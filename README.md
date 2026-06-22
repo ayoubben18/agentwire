@@ -39,76 +39,78 @@ server tools     client tools          interactive tools
 
 ## Quick start
 
-```ts
-// 1. Declare channels (your app owns these — the library ships none)
-import { defineChannels, chan } from "@kovenlabs/agentwire";
-
-export const events = defineChannels({
-  templateRequest: chan<{ version: string }>("page:request-template"),
-  templateCurrent: chan<Record<string, unknown>>("page:current-template"),
-  templateUpdate:  chan<{ path: string; value: unknown }>("page:update-template"),
-});
-```
+A slice of a flight-booking agent — the full walkthrough is in the
+[docs](https://docs-lemon-alpha.vercel.app/docs/getting-started).
 
 ```ts
-// 2. Declare tools once — server side
+// 1. Declare tools once — a `server` tool and an `interactive` one
 import { defineTool } from "@kovenlabs/agentwire-tools";
 import { z } from "zod";
 
-export const askUser = defineTool.interactive({
-  name: "askUser",
-  description: "Ask the user one or more questions.",
-  label: "Asking you",
-  inputSchema: z.object({ questions: z.array(z.string()) }),
+export const searchFlights = defineTool.server({
+  name: "searchFlights",
+  description: "Search flights between two cities on a date.",
+  label: "Searching flights",
+  inputSchema: z.object({ from: z.string(), to: z.string(), date: z.string() }),
+  execute: ({ from, to, date }) => flightsApi.search({ from, to, date }),
 });
 
-export const generateTemplate = defineTool.server({
-  name: "generateTemplate",
-  description: "Generate a page template.",
-  label: "Generating template",
-  inputSchema: z.object({ pageId: z.string() }),
-  execute: async ({ pageId }) => buildTemplate(pageId),
+export const pickFlight = defineTool.interactive({
+  name: "pickFlight",
+  description: "Show the flights and let the traveler choose one.",
+  label: "Choosing a flight",
+  inputSchema: z.object({
+    options: z.array(z.object({ id: z.string(), airline: z.string(), price: z.number() })),
+  }),
 });
+
+export const tools = { searchFlights, pickFlight };
 ```
 
 ```ts
-// 3. Server route — convert to AI SDK tools
+// 2. Server route — convert to AI SDK tools
 import { toAiToolSet } from "@kovenlabs/agentwire-ai-sdk";
+import { consoleLogger } from "@kovenlabs/agentwire";
 import { streamText } from "ai";
 
-const tools = toAiToolSet({ askUser, generateTemplate }, { logger });
-streamText({ model, tools, /* … */ });
-```
-
-```tsx
-// 4. Client — wire the chat once
-import { useAgentChat } from "@kovenlabs/agentwire-ai-sdk/react";
-
-const chat = useAgentChat({
-  chatId,
-  agent: "page_builder",
-  interactiveTools: ["askUser"],          // or auto-detected from the registry
-  terminalTools: ["suggestFollowUps"],
-  toolHandlers: {
-    navigate: (call) => router.push(call.input.target),
-  },
-  logger,
+streamText({
+  model,
+  messages,
+  tools: toAiToolSet(tools, { logger: consoleLogger }),
 });
 ```
 
 ```tsx
-// 5. Render the stream — <AgentMessages> mounts your interactive widgets,
+// 3. Client — wire the chat once (interactive tools auto-detected)
+import { useAgentChat } from "@kovenlabs/agentwire-ai-sdk/react";
+
+const chat = useAgentChat({ chatId, api: "/api/chat" });
+```
+
+```tsx
+// 4. Render the stream — <AgentMessages> mounts your interactive widgets,
 //    renders Approve/Deny for approval tools, and shows status → output.
 import { AgentMessages, completeInteractive } from "@kovenlabs/agentwire-ai-sdk/react";
 
+function FlightGallery({ toolCallId, input }) {
+  // settle the open call from the UI:
+  const choose = (flightId) => completeInteractive("pickFlight", toolCallId, { flightId });
+  return input.options.map((f) => <button key={f.id} onClick={() => choose(f.id)}>{f.airline}</button>);
+}
+
 <AgentMessages
   chat={chat}
-  interactive={{ askUser: AskUserForm }}
+  interactive={{ pickFlight: FlightGallery }}
   slots={{ text: (t) => <p>{t}</p> }}
 />;
+```
 
-// inside AskUserForm — settle the call from the UI:
-completeInteractive("askUser", toolCallId, { answers });
+```tsx
+// 5. (optional) React to results anywhere — off-chat, via the bus
+import { useToolResult, useInteractiveResult } from "@kovenlabs/agentwire-ai-sdk/react";
+
+useToolResult("searchFlights", (flights) => setFlights(flights));
+useInteractiveResult("pickFlight", (picked) => setSelected(picked));
 ```
 
 ## Develop
