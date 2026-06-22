@@ -1,3 +1,9 @@
+## [0.1.1](https://github.com/kovenlabs/agentwire/compare/v0.1.0...v0.1.1) (2026-06-22)
+
+### 📚 Documentation
+
+* link the documentation site in README ([8b1dccf](https://github.com/kovenlabs/agentwire/commit/8b1dccf47a49c808bf0f6d4215bbaa5b6ab15c62))
+
 ## [0.1.0](https://github.com/kovenlabs/agentwire/compare/v0.0.0...v0.1.0) (2026-06-22)
 
 ### ✨ Features

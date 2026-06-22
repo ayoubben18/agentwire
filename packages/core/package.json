@@ -1,6 +1,6 @@
 {
   "name": "@kovenlabs/agentwire",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Zero-dependency typed pub/sub event bus for agent tools, with channel registry and interactive-tool primitives.",
   "license": "MIT",
   "type": "module",

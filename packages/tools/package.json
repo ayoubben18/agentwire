@@ -1,6 +1,6 @@
 {
   "name": "@kovenlabs/agentwire-tools",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Framework-agnostic defineTool factory and tool registry for agentwire.",
   "license": "MIT",
   "type": "module",

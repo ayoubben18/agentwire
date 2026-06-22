@@ -1,6 +1,6 @@
 {
   "name": "@kovenlabs/agentwire-react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React hooks for the agentwire bus: subscribe, request, and form bridging.",
   "license": "MIT",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@kovenlabs/agentwire-ai-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Vercel AI SDK adapter for agentwire: tool conversion + the useAgentChat runtime.",
   "license": "MIT",
   "type": "module",
